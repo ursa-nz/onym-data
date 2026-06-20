@@ -1,0 +1,3 @@
+pwn-3.0
+Princeton WordNet 3.0, from Debian wordnet-base 3.0-41. The base graph swaps to OEWN 2025 at the
+cutover, PLAN.md step 3; this file's first line is the only edition identifier the tests read.

@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 ursa.nz <code@ursa.nz>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+version = 1
+
+# The vendored base graph: Princeton WordNet 3.0 (Debian wordnet-base 3.0-41), compressed. A binary
+# blob with no place for an inline header; its full provenance is in PROVENANCE.md.
+[[annotations]]
+path = "base/wndb.tar.zst"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2006 Princeton University"
+SPDX-License-Identifier = "LicenseRef-WordNet"
+
+# The etymology overlay: prose parsed from the English Wiktionary (via kaikki.org wiktextract),
+# keyed by WordNet lemma. The prose is the licensable content; CC-BY-SA-3.0, Wiktionary contributors.
+[[annotations]]
+path = "overlays/etym.onym"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Wiktionary contributors"
+SPDX-License-Identifier = "CC-BY-SA-3.0"
+
+# Plain-text markers, the machine-written coverage report, and config that cannot carry, or does not
+# warrant, an inline header.
+[[annotations]]
+path = ["base/VERSION", "recipes/SOURCES.lock", "tests/coverage-report.txt", ".gitignore"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 ursa.nz <code@ursa.nz>"
+SPDX-License-Identifier = "GPL-3.0-or-later"

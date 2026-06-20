@@ -1,0 +1,19 @@
+# Raw sources each vendored artefact was built from. Checksums of the vendored
+# artefacts themselves are listed last, for integrity.
+
+base/wndb.tar.zst   <- wordnet-base_3.0-41_all.deb
+  url       https://deb.debian.org/debian/pool/main/w/wordnet/wordnet-base_3.0-41_all.deb
+  sha256    e50d14b2ee444eaf36ef2a3bd38e50c623b47ba22b2301adc4a5f12736da9264
+  edition   pwn-3.0 (Princeton WordNet 3.0)
+  licence   LicenseRef-WordNet
+
+overlays/etym.onym  <- kaikki.org English wiktextract
+  url       https://kaikki.org/dictionary/English/kaikki.org-dictionary-English.jsonl.gz
+  sha256    592834d000c853546052872ead05c9f9e761866bd0c6ab14471f4f5ca7b8b195
+  modified  Mon, 15 Jun 2026 10:15:55 GMT
+  producer  ../core/tools/build-overlay.sh (tools/etym-build)
+  licence   CC-BY-SA-3.0
+
+# Vendored artefact checksums
+base/wndb.tar.zst   sha256 680b55aa23d0d43943af698934c01ead8aea7226fd583121c0dbf1d131d12e48
+overlays/etym.onym  sha256 1636b057493c0c79e67d4820c067c289127d707987ec6e44d51a773c98d990cb

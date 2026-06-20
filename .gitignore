@@ -1,0 +1,5 @@
+# Output of prepare.sh: a materialised WordNet data directory, regenerable from the vendored blob.
+/build/
+
+# Heavy raw sources fetched by recipes/fetch-sources.sh; never vendored (PLAN.md section 4).
+/scratch/
