@@ -21,7 +21,7 @@ note() { printf '  %s\n' "$1"; }
 bad() { printf 'FAIL %s\n' "$1"; fail=$((fail + 1)); }
 
 echo "==> prepare base into a scratch directory"
-"$here/prepare.sh" "$tmp/wordnet" >/dev/null
+"$here/prepare.sh" --base-only "$tmp/wordnet" >/dev/null
 
 echo "==> required WordNet files present and non-empty"
 required="data.noun data.verb data.adj data.adv \
@@ -69,8 +69,7 @@ echo "==> engine conformance against the prepared base (if a dumper is available
 dump="${ONYM_DUMP:-$here/../core/target/release/onym-dump}"
 runner="$here/../core/conformance/run-conformance"
 if [ -x "$dump" ] && [ -x "$runner" ]; then
-  # The conformance fixtures are overlay-free, so validate the base without etym.onym beside it.
-  rm -f "$tmp/wordnet/etym.onym"
+  # The base was prepared overlay-free above, the way the conformance fixtures are generated.
   if "$runner" "$dump" --data "$tmp/wordnet" >/dev/null 2>&1; then
     note "conformance kit passes against the prepared base"
   else
