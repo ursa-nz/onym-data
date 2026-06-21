@@ -1,19 +1,28 @@
 # Raw sources each vendored artefact was built from. Checksums of the vendored
 # artefacts themselves are listed last, for integrity.
 
-base/wndb.tar.zst   <- wordnet-base_3.0-41_all.deb
-  url       https://deb.debian.org/debian/pool/main/w/wordnet/wordnet-base_3.0-41_all.deb
-  sha256    e50d14b2ee444eaf36ef2a3bd38e50c623b47ba22b2301adc4a5f12736da9264
-  edition   pwn-3.0 (Princeton WordNet 3.0)
-  licence   LicenseRef-WordNet
+base/wndb.tar.zst   <- english-wordnet-2025-plus.xml.gz, ground through OEWNTK
+  url       https://github.com/globalwordnet/english-wordnet/releases/download/2025-edition/english-wordnet-2025-plus.xml.gz
+  sha256    31f4af16c54b532fd5484d4cc33aee588a31bb5b70683ae8197842fde5b586bc
+  edition   oewn-2025 (Open English WordNet 2025 Plus, lossless, with proper nouns)
+  licence   CC-BY-4.0 AND LicenseRef-WordNet
+  extras    oewntk/fromxml xml2 (the grinder inputs the merged XML does not carry)
+    verbTemplates.xml         sha256 45420bd39d4767c9bb287aaf84c5779d19bca97453369ae7f1a1ac8a294dd0b8
+    senseToVerbTemplates.xml  sha256 952f45a340986b63a0a47e7139376a525ecb08bd8975d951f03b3b66a77b2ec3
+    senseToTagCounts.xml      sha256 f18929fa727a2b6c1c56bd9d60cb0cdce6a2619b23e7fd7708a436b2ec56a29e
+  toolchain OEWNTK chain, built from these commits by recipes/fetch-sources.sh
+    model           996a3daaa1cf307b38071ad5a40922e62d4fb084
+    fromxml         d8eb0bee19b194b7d132b5f6eabf29f93c458f88
+    towndb          fe70924d791c20c6f4e1c6acf46c70d11f4d4285
+    grind_xml2wndb  f2164c2f8def0ae056fb46935ce0f6c451d67b92
 
 overlays/etym.onym  <- kaikki.org English wiktextract
   url       https://kaikki.org/dictionary/English/kaikki.org-dictionary-English.jsonl.gz
   sha256    592834d000c853546052872ead05c9f9e761866bd0c6ab14471f4f5ca7b8b195
   modified  Mon, 15 Jun 2026 10:15:55 GMT
-  producer  ../core/tools/build-overlay.sh (tools/etym-build)
+  producer  ../core/tools/build-overlay.sh (tools/etym-build), against the oewn-2025 lemma set
   licence   CC-BY-SA-3.0
 
 # Vendored artefact checksums
-base/wndb.tar.zst   sha256 680b55aa23d0d43943af698934c01ead8aea7226fd583121c0dbf1d131d12e48
-overlays/etym.onym  sha256 1636b057493c0c79e67d4820c067c289127d707987ec6e44d51a773c98d990cb
+base/wndb.tar.zst   sha256 4b5c87e304d076f01bd3373a06258c5263fa7ed8766fad4bc2801165b16acd7e
+overlays/etym.onym  sha256 c0f9d06d487c85b45d9dbb02a1915c0dbbb3b29eee01cc5da9e3faaa50d49631

@@ -3,13 +3,14 @@
 
 version = 1
 
-# The vendored base graph: Princeton WordNet 3.0 (Debian wordnet-base 3.0-41), compressed. A binary
-# blob with no place for an inline header; its full provenance is in PROVENANCE.md.
+# The vendored base graph: Open English WordNet 2025 Plus, ground to WNDB and compressed. A binary
+# blob with no place for an inline header; its full provenance is in PROVENANCE.md. CC-BY-4.0 from the
+# OEWN team, with the underlying Princeton WordNet grant preserved.
 [[annotations]]
 path = "base/wndb.tar.zst"
 precedence = "aggregate"
-SPDX-FileCopyrightText = "2006 Princeton University"
-SPDX-License-Identifier = "LicenseRef-WordNet"
+SPDX-FileCopyrightText = ["2019-2025 The Open English WordNet Team", "2011 Princeton University"]
+SPDX-License-Identifier = "CC-BY-4.0 AND LicenseRef-WordNet"
 
 # The etymology overlay: prose parsed from the English Wiktionary (via kaikki.org wiktextract),
 # keyed by WordNet lemma. The prose is the licensable content; CC-BY-SA-3.0, Wiktionary contributors.

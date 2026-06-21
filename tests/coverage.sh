@@ -22,6 +22,9 @@ floor_pct=43.0
 
 [ -s "$overlay" ] || { echo "coverage: missing $overlay" >&2; exit 1; }
 
+# The base edition the report names, read from the first line of base/VERSION.
+edition=$(head -n1 "$here/base/VERSION" 2>/dev/null || echo "unknown")
+
 # The header lines lead with a space and read "key: value"; pull the two lemma counts.
 header_value() { grep -m1 "^ $1:" "$overlay" | sed "s/^ $1: *//"; }
 wordnet_lemmas=$(header_value 'wordnet-lemmas')
@@ -37,7 +40,7 @@ below=$(awk -v p="$pct" -v f="$floor_pct" 'BEGIN { print (p < f) ? 1 : 0 }')
 
 if [ "${1:-}" != "--check" ]; then
   cat > "$report" <<EOF
-Etymology overlay coverage on the pwn-3.0 base.
+Etymology overlay coverage on the $edition base.
 
   matched lemmas:  $matched_lemmas
   WordNet lemmas:  $wordnet_lemmas

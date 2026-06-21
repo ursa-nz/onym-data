@@ -1,3 +1,4 @@
-pwn-3.0
-Princeton WordNet 3.0, from Debian wordnet-base 3.0-41. The base graph swaps to OEWN 2025 at the
-cutover, PLAN.md step 3; this file's first line is the only edition identifier the tests read.
+oewn-2025
+Open English Wordnet 2025, the lossless Plus edition with proper nouns. Built from the OEWN release
+asset english-wordnet-2025-plus.xml.gz through the OEWNTK grind_xml2wndb chain, recipes/build.sh.
+This file's first line is the only edition identifier the tests read.
