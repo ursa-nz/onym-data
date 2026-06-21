@@ -46,6 +46,18 @@ declare -A oewntk_commit=(
 # The wiktextract English extract from kaikki.org: English headwords with parsed etymology prose.
 wikt_url="https://kaikki.org/dictionary/English/kaikki.org-dictionary-English.jsonl.gz"
 
+# The Open Multilingual Wordnet components for the translations overlay, plus the Collaborative
+# Interlingual Index both they and OEWN are aligned to. Each component is a WN-LMF tarball keyed by
+# ILI; the working set is the licence-clean trio vetted in the producer go/no-go (PLAN section 8).
+# CILI is fetched for provenance and as the shared index; the join itself is ILI to ILI.
+cili_url="https://github.com/globalwordnet/cili/releases/download/v1.0/cili.tsv.xz"
+declare -A omw_sha256=(
+  [omw-it-2.0.tar.xz]="d329dd3984f3eb19e4ca0cdff22f75ac7edf367c1d3f515d3635ec42825b37bb"
+  [omw-id-2.0.tar.xz]="54a01d197fcf29e3127bc60ea0d5067b3386439d6e1099a3530fcbae0d8154fc"
+  [omw-pt-2.0.tar.xz]="ee1d2b1686299cbed057aba34468576aaa977270902a836c24a01c1f64772c5d"
+)
+cili_sha256="e9e07aab61026956ddedda86a5d46429b49219984ca49fa1ab67cbff9a32218a"
+
 echo "==> OEWN 2025 Plus XML"
 curl -sSL -o "$scratch/english-wordnet-2025-plus.xml.gz" "$plus_url"
 echo "$plus_sha256  $scratch/english-wordnet-2025-plus.xml.gz" | sha256sum -c -
@@ -89,5 +101,18 @@ wikt_sha256="$(sha256sum "$scratch/wikt-en.jsonl.gz" | cut -d' ' -f1)"
 wikt_date="$(curl -sI "$wikt_url" | awk -F': ' 'tolower($1)=="last-modified"{print $2}' | tr -d '\r')"
 echo "    last-modified $wikt_date"
 echo "    sha256 $wikt_sha256"
+
+echo "==> CILI and OMW components"
+mkdir -p "$scratch/omw"
+curl -sSL -o "$scratch/omw/cili.tsv.xz" "$cili_url"
+echo "$cili_sha256  $scratch/omw/cili.tsv.xz" | sha256sum -c -
+for f in "${!omw_sha256[@]}"; do
+  curl -sSL -o "$scratch/omw/$f" \
+    "https://github.com/omwn/omw-data/releases/download/v2.0/$f"
+  echo "${omw_sha256[$f]}  $scratch/omw/$f" | sha256sum -c -
+  # The producer reads each component's WN-LMF; extract just the .xml into omw/, flattened.
+  tar -xJf "$scratch/omw/$f" -C "$scratch/omw" --strip-components=1 --wildcards '*/*.xml'
+done
+
 echo
 echo "Sources fetched to $scratch. Record any changed checksum in recipes/SOURCES.lock."

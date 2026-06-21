@@ -53,5 +53,17 @@ else
   echo "    skipped: need $core/tools/build-overlay.sh and $scratch/wikt-en.jsonl.gz" >&2
 fi
 
+echo "==> overlays/omw.onym (via $core/tools/build-omw.sh, keyed to the freshly ground base)"
+# The producer keys on the WNDB synset offsets in the just-built index.sense, joining through the
+# OEWN LMF this run decompressed, so the overlay stays in lockstep with the base.
+if [ -x "$core/tools/build-omw.sh" ] && ls "$scratch"/omw/*.xml >/dev/null 2>&1 && [ -f "$scratch/oewn-plus.xml" ]; then
+  # Build the plain overlay in scratch, then vendor it compressed; prepare.sh decompresses it back.
+  "$core/tools/build-omw.sh" "$scratch" "$scratch/omw.onym"
+  zstd -q -19 -f -o "$here/overlays/omw.onym.zst" "$scratch/omw.onym"
+  echo "    $(du -h "$scratch/omw.onym" | cut -f1) raw, $(du -h "$here/overlays/omw.onym.zst" | cut -f1) vendored"
+else
+  echo "    skipped: need $core/tools/build-omw.sh, $scratch/omw/*.xml and $scratch/oewn-plus.xml" >&2
+fi
+
 echo
-echo "Rebuilt. Update recipes/SOURCES.lock and run tests/validate.sh and tests/coverage.sh."
+echo "Rebuilt. Update recipes/SOURCES.lock and run tests/validate.sh, tests/coverage.sh and tests/coverage-omw.sh."

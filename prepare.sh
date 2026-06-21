@@ -27,7 +27,6 @@ fi
 target=${1:-"$here/build/wordnet"}
 
 base_blob="$here/base/wndb.tar.zst"
-overlay="$here/overlays/etym.onym"
 
 [ -f "$base_blob" ] || { echo "prepare: missing base blob $base_blob" >&2; exit 1; }
 
@@ -35,9 +34,19 @@ mkdir -p "$target"
 # Decompress the base graph in place. zstd and tar are the only tools needed.
 zstd -dc -- "$base_blob" | tar -xf - -C "$target"
 
-# Overlays are additive and absent-by-default; copy each one that exists, unless --base-only.
-if [ "$overlays" -eq 1 ] && [ -f "$overlay" ]; then
-  cp -f -- "$overlay" "$target/etym.onym"
+# Overlays are additive and absent-by-default; lay down each one that exists, unless --base-only. A
+# new overlay drops into overlays/ and is materialised here with no further change. A plain .onym is
+# copied; a compressed .onym.zst is decompressed to its bare name, so a large overlay ships small but
+# the engine still reads a plain file.
+if [ "$overlays" -eq 1 ]; then
+  for overlay in "$here"/overlays/*.onym; do
+    [ -f "$overlay" ] && cp -f -- "$overlay" "$target/$(basename "$overlay")"
+  done
+  for overlay in "$here"/overlays/*.onym.zst; do
+    [ -f "$overlay" ] || continue
+    name=$(basename "$overlay" .zst)
+    zstd -dc -- "$overlay" > "$target/$name"
+  done
 fi
 
 echo "$target"

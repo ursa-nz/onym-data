@@ -20,10 +20,29 @@ precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Wiktionary contributors"
 SPDX-License-Identifier = "CC-BY-SA-3.0"
 
-# Plain-text markers, the machine-written coverage report, and config that cannot carry, or does not
+# The translations overlay: words from the Open Multilingual Wordnet components, keyed by synset. Each
+# component is licensed on its own terms and credited individually; the overlay aggregates the trio in
+# the current working set, so its identifier is their conjunction.
+[[annotations]]
+path = "overlays/omw.onym.zst"
+precedence = "aggregate"
+SPDX-FileCopyrightText = [
+  "2010-2020 MultiWordNet, FBK",
+  "2011-2015 Wordnet Bahasa, Francis Bond and others",
+  "2010-2020 OpenWN-PT, Alexandre Rademaker and others",
+]
+SPDX-License-Identifier = "CC-BY-3.0 AND MIT AND CC-BY-SA-3.0"
+
+# Plain-text markers, the machine-written coverage reports, and config that cannot carry, or does not
 # warrant, an inline header.
 [[annotations]]
-path = ["base/VERSION", "recipes/SOURCES.lock", "tests/coverage-report.txt", ".gitignore"]
+path = [
+  "base/VERSION",
+  "recipes/SOURCES.lock",
+  "tests/coverage-report.txt",
+  "tests/omw-coverage-report.txt",
+  ".gitignore",
+]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 ursa.nz <code@ursa.nz>"
 SPDX-License-Identifier = "GPL-3.0-or-later"

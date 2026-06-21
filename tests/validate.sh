@@ -54,16 +54,25 @@ for pos in noun verb adj adv; do
   note "data.$pos: $1 synsets, all well-formed"
 done
 
-echo "==> overlay present and well-formed"
-if [ -s "$here/overlays/etym.onym" ]; then
-  if iconv -f UTF-8 -t UTF-8 "$here/overlays/etym.onym" >/dev/null 2>&1; then
-    note "etym.onym is valid UTF-8"
+echo "==> overlays present and well-formed"
+# A plain .onym reads directly; a compressed .onym.zst is decompressed to check it, the same form
+# prepare.sh lays down for the engine.
+for overlay in etym.onym omw.onym.zst; do
+  src="$here/overlays/$overlay"
+  if [ -s "$src" ]; then
+    case "$overlay" in
+      *.zst) reader="zstd -dc --" ;;
+      *) reader="cat --" ;;
+    esac
+    if $reader "$src" | iconv -f UTF-8 -t UTF-8 >/dev/null 2>&1; then
+      note "$overlay is valid UTF-8"
+    else
+      bad "$overlay is not valid UTF-8"
+    fi
   else
-    bad "etym.onym is not valid UTF-8"
+    bad "overlays/$overlay missing or empty"
   fi
-else
-  bad "overlays/etym.onym missing or empty"
-fi
+done
 
 echo "==> engine conformance against the prepared base (if a dumper is available)"
 dump="${ONYM_DUMP:-$here/../core/target/release/onym-dump}"

@@ -23,6 +23,18 @@ overlays/etym.onym  <- kaikki.org English wiktextract
   producer  ../core/tools/build-overlay.sh (tools/etym-build), against the oewn-2025 lemma set
   licence   CC-BY-SA-3.0
 
+overlays/omw.onym.zst  <- Open Multilingual Wordnet components, joined via the Collaborative Interlingual Index
+  producer  ../core/tools/build-omw.sh (tools/omw-build), keyed to the oewn-2025 base index.sense; vendored zstd-compressed, prepare.sh decompresses
+  join      OEWN synset -> ILI (from the OEWN LMF) -> OMW component ILI -> words; CILI is the shared
+            index both sides align to, fetched for provenance, not read for the join
+  cili      https://github.com/globalwordnet/cili/releases/download/v1.0/cili.tsv.xz
+            sha256 e9e07aab61026956ddedda86a5d46429b49219984ca49fa1ab67cbff9a32218a (CC-BY-4.0)
+  components (omwn/omw-data v2.0 release; working set, PLAN section 8)
+    omw-it-2.0.tar.xz  sha256 d329dd3984f3eb19e4ca0cdff22f75ac7edf367c1d3f515d3635ec42825b37bb  MultiWordNet (Italian)      CC-BY-3.0
+    omw-id-2.0.tar.xz  sha256 54a01d197fcf29e3127bc60ea0d5067b3386439d6e1099a3530fcbae0d8154fc  Wordnet Bahasa (Indonesian) MIT
+    omw-pt-2.0.tar.xz  sha256 ee1d2b1686299cbed057aba34468576aaa977270902a836c24a01c1f64772c5d  OpenWN-PT (Portuguese)      CC-BY-SA-3.0
+
 # Vendored artefact checksums
 base/wndb.tar.zst   sha256 4b5c87e304d076f01bd3373a06258c5263fa7ed8766fad4bc2801165b16acd7e
 overlays/etym.onym  sha256 c0f9d06d487c85b45d9dbb02a1915c0dbbb3b29eee01cc5da9e3faaa50d49631
+overlays/omw.onym.zst  sha256 1d4d7e2403876b8266acd8f3d06f2bdb09ebb23c81aa6ab0ac753dd15d28c9b6
