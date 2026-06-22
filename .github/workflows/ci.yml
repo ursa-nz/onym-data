@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: 2026 ursa.nz <code@ursa.nz>
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    # Ubuntu 24.04 for parity with the engine and app CI, regardless of the runner image.
+    container: ubuntu:24.04
+    steps:
+      # The base image is minimal and runs as root. zstd is what prepare.sh and the coverage scripts
+      # use to decompress the vendored blobs; the rest is what the checkout action and the engine
+      # build below need. There is no sudo because we are already root.
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            ca-certificates git nodejs curl gcc libc6-dev zstd pipx
+
+      - uses: actions/checkout@v4
+
+      # The engine is cloned beside this checkout so validate.sh can run the conformance kit: the
+      # byte-exact parity check that the prepared base reproduces the golden fixtures. onym-dump reads
+      # the data over --data at runtime, so the engine needs no data of its own here.
+      - name: Check out onym-engine
+        run: git clone --depth 1 https://github.com/ursa-nz/onym-engine ../core
+
+      # Ubuntu's packaged Rust is too old for edition 2024, so install rustup without a default
+      # toolchain; cargo then honours the engine's rust-toolchain.toml pin when it builds onym-dump.
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - name: REUSE lint
+        # reuse is fetched from PyPI at run time and the current release refuses to start without an
+        # encoding-detection module. Pull the charset-normalizer extra so the install is self-contained.
+        run: pipx run --spec 'reuse[charset-normalizer]' reuse lint
+
+      - name: Build the conformance dumper
+        run: cargo build --release --bin onym-dump --manifest-path ../core/Cargo.toml
+
+      # Structural invariants of the base, plus the conformance kit now that onym-dump is built.
+      - name: Validate the data
+        run: tests/validate.sh
+
+      # Gate the overlays on their regression floors so a data bump cannot quietly drop coverage.
+      - name: Etymology coverage floor
+        run: tests/coverage.sh --check
+
+      - name: Translation coverage floors
+        run: tests/coverage-omw.sh --check
