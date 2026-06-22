@@ -42,7 +42,13 @@ jobs:
         run: pipx run --spec 'reuse[charset-normalizer]' reuse lint
 
       - name: Build the conformance dumper
-        run: cargo build --release --bin onym-dump --manifest-path ../core/Cargo.toml
+        # Build from inside the engine checkout so cargo finds its rust-toolchain.toml pin; rustup
+        # was installed without a default toolchain. onym-dump lands in ../core/target/release,
+        # where validate.sh looks for it.
+        run: |
+          cd ../core
+          rustup toolchain install
+          cargo build --release --bin onym-dump
 
       # Structural invariants of the base, plus the conformance kit now that onym-dump is built.
       - name: Validate the data
